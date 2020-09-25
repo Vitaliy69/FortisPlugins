@@ -1,0 +1,909 @@
+<!DOCTYPE html  PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>Frior working process</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style>
+body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+h1, h2, h3, h4 {  font-family: "Trebuchet MS",Georgia,"Times New Roman",serif; }
+ul.toc { padding: 4px; margin-left: 0; }
+ul.toc li { list-style-type:none; }
+ul.toc li.heading2 { margin-left: 1em; }
+ul.toc li.heading3 { margin-left: 2em; }
+a.wiki-anchor { display: none; margin-left: 6px; text-decoration: none; }
+a.wiki-anchor:hover { color: #aaa !important; text-decoration: none; }
+h1:hover a.wiki-anchor, h2:hover a.wiki-anchor, h3:hover a.wiki-anchor { display: inline; color: #ddd; }
+</style>
+</head>
+<body>
+<a name="FRior-API"></a>
+<h3 >FRior API<a href="#FRior-API" class="wiki-anchor">&para;</a></h3>
+
+
+	<a name="protocol"></a>
+<h1 >protocol<a href="#protocol" class="wiki-anchor">&para;</a></h1>
+
+
+<blockquote>
+
+	<p><strong>Client -> FRior : query is in the form of string</strong><br /><strong>FRior -> Client : data is in the form of XML</strong></p>
+
+
+</blockquote>
+
+<blockquote>
+
+	<p><strong>FRior port : 8080</strong></p>
+
+
+<blockquote>
+
+	<p>ex. <a class="external" href="http://boxip:8080/frql?q=svc_list">http://boxip:8080/frql?q=svc_list</a></p>
+
+
+</blockquote></blockquote>
+
+	<a name="history"></a>
+<h2 >history<a href="#history" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+	<p>version 1.2</p>
+
+
+<blockquote>
+
+	<ol>
+	<li>frior:version="%d.%d" Information is added.</li>
+		<li>Error, in the time information of Alarm, is Fixed.</li>
+		<li>HLS has been added in the net_protocol of start_streaming</li>
+	</ol>
+
+
+</blockquote></blockquote>
+
+	<a name="query"></a>
+<h1 >query<a href="#query" class="wiki-anchor">&para;</a></h1>
+
+
+	<a name="svc_list"></a>
+<h2 >svc_list<a href="#svc_list" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+	<ul>
+	<li>sat_idx, sat_degree, sat_name
+	<ul>
+	<li>tp_idx, tp_freq, tp_polar, tp_sr, tp_tsid, tp_orgnetid, tp_netname, change_svc_possibility, streaming_possibility
+	<ul>
+	<li>svc_idx, svc_type, svc_sid, svc_vpid, svc_apid, svc_ppid, svc_scrambled, svc_blocked, svc_fav
+	<ul>
+	<li>service_num, service_lcn, service_encoding, service_current, name</li>
+		<li>evt_id, evt_stime, evt_etime
+	<ul>
+	<li>name_encoding, name</li>
+		<li>text_encoding, text</li>
+	</ul>
+	</li>
+		<li>recording_duration, recording_rectime</li>
+	</ul></li>
+	</ul></li>
+	</ul></li>
+	</ul>
+
+
+	<ul>
+	<li>device_total, device_used, device_free</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+&lt;frior:query xmlns:frior="http://%s:%d" frior:count="%d" frior:created="%4d-%02d-%02dT%02d:%02d:%02d" frior:version="%d.%d"&gt;
+  &lt;results&gt;
+    &lt;sat idx="%d" degree="%d" name="%s"&gt;
+      &lt;tp idx="%d" freq="%d" polar="%d" sr="%d" tsid="%d" orgnetid="%d" netname="%s" change_svc_possibility="%d" streaming_possibility="%d"&gt;
+        &lt;svc idx="%d" type="%d" sid="%d" vpid="%d" apid="%d" ppid="%d" scrambled="%d" blocked="%d" fav="%d"&gt;
+          &lt;service num="%d" lcn="%d" encoding="%s"&gt;%s&lt;/service&gt;
+          &lt;evt id="%d" stime="%4d-%02d-%02dT%02d:%02d" etime="%4d-%02d-%02dT%02d:%02d"&gt;
+            &lt;name encoding="%s"&gt;%s&lt;/name&gt;
+            &lt;text encoding="%s"&gt;%s&lt;/text&gt;
+          &lt;/evt&gt;
+          &lt;recording duration="T%02d:%02d" rectime="T%02d:%02d"/&gt;
+        &lt;/svc&gt;
+        &lt;svc idx="%d" type="%d" sid="%d" vpid="%d" apid="%d" ppid="%d" scrambled="%d" blocked="%d" fav="%d"&gt;
+          &lt;service num="%d" lcn="%d" encoding="%s" current="1"&gt;%s&lt;/service&gt;
+          &lt;evt id="%d" stime="%4d-%02d-%02dT%02d:%02d" etime="%4d-%02d-%02dT%02d:%02d"&gt;
+            &lt;name encoding="%s"&gt;%s&lt;/name&gt;
+            &lt;text encoding="%s"&gt;%s&lt;/text&gt;
+          &lt;/evt&gt;
+        &lt;/svc&gt;
+        …
+      &lt;/tp&gt;
+      …
+    &lt;/sat&gt;
+    …
+
+    &lt;device total="%d" used="%d" free="%d"/&gt;
+
+  &lt;/results&gt;
+&lt;/frior:query&gt;
+&lt;!--  frql.frior  --&gt;
+</pre>
+
+<blockquote>
+
+	<ul>
+	<li>If blocked is 1, when the start_streaming or change_svc is requested, then the pin code must be transmitted together.</li>
+		<li>service_num is just an ordinary service number according to the service sequence. And service_lcn is a Logical channel number.</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+	<ul>
+	<li>evt is an information about the current event.</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+	<ul>
+	<li>recording_svc_list includes the information about current recording time(rectime) and duration.</li>
+		<li>recording_svc_list also has the device information.</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+	<ul>
+	<li>fav number is written in 32bits length. And each of these 32bits values can be either 1 or 0. (From LSB, each one Bit indicates the idx of the frql?q=fav_group list)</li>
+		<li>If the first bit of this fav number is 1, then that service belongs to the first favorite group.</li>
+		<li>Consequently, the each bit of fav number represents the location of the favorite group where that service belongs to.</li>
+		<li><strong>If the specific service belongs to the blocked favorite group, then that service shall only be shown within that blocked favorite group</strong></li>
+		<li><strong>Service can belong to more than one blocked favorite groups</strong></li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote><blockquote>
+
+	<p>query (Client -> FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?q=svc_list</li>
+	</ul>
+
+
+</blockquote>
+
+	<a name="fav_group"></a>
+<h2 >fav_group<a href="#fav_group" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+	<ul>
+	<li>idx, sat_idx, blocked, name</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+&lt;frior:query xmlns:frior="http://%s:%d" frior:count="%d" frior:created="%4d-%02d-%02dT%02d:%02d:%02d" frior:version="%d.%d"&gt;
+  &lt;results&gt;
+    &lt;fav idx="%d" sat_idx="%d" blocked="%d" encoding="%s"&gt;%s&lt;/fav&gt;
+    &lt;fav idx="%d" sat_idx="%d" blocked="%d" encoding="%s"&gt;%s&lt;/fav&gt;
+    &lt;fav idx="%d" sat_idx="%d" blocked="%d" encoding="%s"&gt;%s&lt;/fav&gt;
+    &lt;fav idx="%d" sat_idx="%d" blocked="%d" encoding="%s"&gt;%s&lt;/fav&gt;
+    ...
+  &lt;/results&gt;
+&lt;/frior:query&gt;
+&lt;!--  frql.frior  --&gt;
+</pre>
+
+<blockquote>
+
+	<ul>
+	<li>sat_idx is a value of the sat_idx when there is a request for start_streaming or change_svc.</li>
+		<li>In case of blocked group, the list should only be shown when confirmed okay by the check_pin query.</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote><blockquote>
+
+	<p>query (Client -> FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?q=fav_group</li>
+	</ul>
+
+
+</blockquote>
+
+	<a name="epg_info"></a>
+<h2 >epg_info<a href="#epg_info" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+	<ul>
+	<li>epg_svc_type, epg_svc_idx
+	<ul>
+	<li>evt_id, evt_stime, evt_etime
+	<ul>
+	<li>name_encoding, name</li>
+		<li>text_encoding, text</li>
+	</ul></li>
+	</ul></li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+&lt;frior:query xmlns:frior="http://%s:%d" frior:count="%d" frior:created="%4d-%02d-%02dT%02d:%02d:%02d" frior:version="%d.%d"&gt;
+  &lt;results&gt;
+    &lt;epg svc_type="%d" svc_idx="%d"&gt;
+      &lt;evt id="%d" stime="%4d-%02d-%02dT%02d:%02d" etime="%4d-%02d-%02dT%02d:%02d"&gt;
+        &lt;name encoding="%s"&gt;%s&lt;/name&gt;
+        &lt;text encoding="%s"&gt;%s&lt;/text&gt;
+      &lt;/evt&gt;
+      &lt;evt id="%d" stime="%4d-%02d-%02dT%02d:%02d" etime="%4d-%02d-%02dT%02d:%02d"&gt;
+        &lt;name encoding="%s"&gt;%s&lt;/name&gt;
+        &lt;text encoding="%s"&gt;%s&lt;/text&gt;
+      &lt;/evt&gt;
+      …
+    &lt;/epg&gt;
+  &lt;/results&gt;
+&lt;/frior:query&gt;
+&lt;!--  frql.frior  --&gt;
+</pre>
+
+<blockquote><blockquote>
+
+	<p>query (Client -> FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?q=epg_info&#38;svc_type=%d&#38;svc_idx=%d (tv = 0, radio = 1)</li>
+	</ul>
+
+
+</blockquote>
+
+	<a name="alarm_list"></a>
+<h2 >alarm_list<a href="#alarm_list" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+	<ul>
+	<li>alarm_id, alarm_type, alarm_mode, alarm_days, alarm_stime, alarm_etime
+	<ul>
+	<li>sat_idx, svc_type, svc_idx, svc_encoding, name</li>
+		<li>evt_id, evt_encoding, name </li>
+		<li>series_id, series_encoding, name</li>
+	</ul></li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+&lt;frior:query xmlns:frior="http://%s:%d" frior:count="%d" frior:created="%4d-%02d-%02dT%02d:%02d:%02d" frior:version="%d.%d"&gt;
+  &lt;results&gt;
+    &lt;alarm id="%d" type="%d" mode="%d" days="%d" stime="%4d-%02d-%02dT%02d:%02d" etime="%4d-%02d-%02dT%02d:%02d"&gt;
+      &lt;svc sat="%d" type="%d" idx="%d" encoding="%s"&gt;%s&lt;/svc&gt;
+      &lt;evt id="%d" encoding="%s"&gt;%s&lt;/evt&gt;
+      &lt;series id="%d" encoding="%s"&gt;%s&lt;/series&gt;
+    &lt;/alarm&gt;
+    &lt;alarm id="%d" type="%d" mode="%d" days="%d" stime="%4d-%02d-%02dT%02d:%02d" etime="%4d-%02d-%02dT%02d:%02d"&gt;
+      &lt;svc sat="%d" type="%d" idx="%d" encoding="%s"&gt;%s&lt;/svc&gt;
+      &lt;evt id="%d" encoding="%s"&gt;%s&lt;/evt&gt;
+      &lt;series id="%d" encoding="%s"&gt;%s&lt;/series&gt;
+    &lt;/alarm&gt;
+    &lt;alarm id="%d" type="%d" mode="%d" days="%d" stime="%4d-%02d-%02dT%02d:%02d" etime="%4d-%02d-%02dT%02d:%02d"&gt;
+      &lt;svc sat="%d" type="%d" idx="%d" encoding="%s"&gt;%s&lt;/svc&gt;
+      &lt;evt id="%d" encoding="%s"&gt;%s&lt;/evt&gt;
+    &lt;/alarm&gt;
+    …
+  &lt;/results&gt;
+&lt;/frior:query&gt;
+&lt;!--  frql.frior  --&gt;
+</pre>
+
+<blockquote>
+
+	<ul>
+	<li>In case of series alarm, both the series id and series name are included.</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote><blockquote>
+
+	<p>query (Client -> FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?q=alarm_list</li>
+	</ul>
+
+
+</blockquote>
+
+	<a name="recording_svc_list"></a>
+<h2 >recording_svc_list<a href="#recording_svc_list" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+	<ul>
+	<li>svc_list</li>
+	</ul>
+
+
+<blockquote>
+
+	<p>query (Client->FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?q=recording_svc_list</li>
+	</ul>
+
+
+</blockquote>
+
+	<a name="status"></a>
+<h2 >status<a href="#status" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+	<ul>
+	<li>streaming status</li>
+		<li>protocol, (client_ip, client_port) or (HLS server url)
+	<ul>
+	<li>svc_idx, svc_type</li>
+	</ul>
+	</li>
+		<li>live svc_idx, svc_type</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+&lt;frior:query xmlns:frior="http://%s:%d" frior:count="%d" frior:created="%4d-%02d-%02dT%02d:%02d:%02d" frior:version="%d.%d"&gt;
+  &lt;results&gt;
+    &lt;streaming status="%d"&gt;
+      &lt;net protocol="%d" client_ip="%d.%d.%d.%d" client_port="%d"/&gt; or &lt;net protocol="%d" url="%s"/&gt;
+      &lt;svc idx="%d" type="%d"&gt;
+        &lt;service num="%d" lcn="%d" encoding="%s"&gt;%s&lt;/service&gt;
+        &lt;info scrambled="%d" teletext="%d" subtitle="%d" dolby="%d" hd="%d" multifeed="%d"/&gt;
+        &lt;evt id="%d" stime="%4d-%02d-%02dT%02d:%02d" etime="%4d-%02d-%02dT%02d:%02d"&gt;
+          &lt;name encoding="%s"&gt;%s&lt;/name&gt;
+          &lt;text encoding="%s"&gt;%s&lt;/text&gt;
+        &lt;/evt&gt;
+      &lt;/svc&gt;
+    &lt;/streaming&gt;
+    &lt;live&gt;
+      &lt;svc idx="%d" type="%d"&gt;
+        &lt;service num="%d" lcn="%d" encoding="%s"&gt;%s&lt;/service&gt;
+        &lt;info scrambled="%d" teletext="%d" subtitle="%d" dolby="%d" hd="%d" multifeed="%d"/&gt;
+        &lt;evt id="%d" stime="%4d-%02d-%02dT%02d:%02d" etime="%4d-%02d-%02dT%02d:%02d"&gt;
+          &lt;name encoding="%s"&gt;%s&lt;/name&gt;
+          &lt;text encoding="%s"&gt;%s&lt;/text&gt;
+        &lt;/evt&gt;
+      &lt;/svc&gt;
+    &lt;/live&gt;
+  &lt;/results&gt;
+&lt;/frior:query&gt;
+&lt;!--  frql.frior  --&gt;
+</pre>
+
+<blockquote>
+
+	<ul>
+	<li>While streaming the status is 1, if not streaming it is 0.</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote><blockquote>
+
+	<p>query (Client->FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?q=status</li>
+	</ul>
+
+
+</blockquote>
+
+<hr />
+
+
+<hr />
+
+
+	<a name="command"></a>
+<h1 >command<a href="#command" class="wiki-anchor">&para;</a></h1>
+
+
+	<a name="set_alarm"></a>
+<h2 >set_alarm<a href="#set_alarm" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+	<ul>
+	<li>ok - alarm_list</li>
+		<li>fail</li>
+	</ul>
+
+
+</blockquote>
+
+<pre>
+&lt;frior:query xmlns:frior="http://%s:%d" frior:count="%d" frior:created="%4d-%02d-%02dT%02d:%02d:%02d" frior:version="%d.%d"&gt;
+  &lt;results&gt;
+    &lt;alarm id="%d" error="%d"&gt;
+     &lt;collision&gt;%d,%d,,,,&lt;/collision&gt;
+    &lt;/alarm&gt;
+  &lt;/results&gt;
+&lt;/frior:query&gt;
+&lt;!--  frql.frior  --&gt;
+</pre>
+
+<blockquote>
+
+	<ul>
+	<li>If the error is AlarmErr_Collision, &lt;collision&gt;%d&lt;/collision&gt; is displayed.</li>
+		<li>If value of collision is 0, the time setting is fault.</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote><blockquote>
+
+	<p>query (Client -> FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?cmd=set_alarm&#38;sat_idx=%d&#38;svc_type=%d&#38;svc_idx=%d&#38;alarm_id=%d&#38;alarm_type=%d&#38;alarm_mode=%d&#38;alarm_days=%d&#38;stime="%d-%d-%dT%d:%d"&#38;etime="%d-%d-%dT%d:%d"&#38;evt_id=%d</li>
+	</ul>
+
+
+	<ul>
+	<li>New series alarm - Not supported.</li>
+		<li>Existing series alarm - Only the AlarmMode_Once(On), and AlarmMode_Disable(Off) are supported.</li>
+		<li>New normal alarm - alarm_id is 0. FRior sets the alarm name automatically using receives evt_id from Client.</li>
+		<li>Existing normal alarm - It is possible to delete alarm, change the all values. However, evt_id is not supported (So, no need to input evt_id value).</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+	<ul>
+	<li>alarm_days : 0xFE - "Bit0-0. Bit1-Mon. Bit2-Tue. Bit3-Wed. Bit4-Thu. Bit5-Fri. Bit6-Sat. Bit7-Sun." </li>
+		<li>alarm_days is only used in the AlarmMode_Weekly</li>
+		<li>If the AlarmMode is in Daily or Weekly, then the Error check only checks for the Time information. (So it does not check the Date information).</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+typedef enum {
+     AlarmMode_Off,
+     AlarmMode_Once,
+     AlarmMode_Daily,
+     AlarmMode_Weekly,
+     AlarmMode_Disable,
+} T_AlarmMode;
+
+typedef enum {
+     AlarmType_Play,
+     AlarmType_Recording,
+     AlarmType_Max
+} T_AlarmType;
+
+typedef enum {
+     AlarmErr_None,
+     AlarmErr_SlotAllocationFail, // no free slot
+     AlarmErr_Collision,          // collision slot param2... if param2 is '0' time error
+     AlarmErr_Running,
+     AlarmErr_WrongValue,
+     AlarmErr_UnKnown
+} T_AlarmError;
+</pre>
+
+	<a name="start_streaming"></a>
+<h2 >start_streaming<a href="#start_streaming" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+&lt;frior:query xmlns:frior="http://%s:%d" frior:count="%d" frior:created="%4d-%02d-%02dT%02d:%02d:%02d" frior:version="%d.%d"&gt;
+  &lt;results&gt;
+    &lt;streaming error="%d"/&gt;
+  &lt;/results&gt;
+&lt;/frior:query&gt;
+&lt;!--  frql.frior  --&gt;
+</pre>
+
+<blockquote><blockquote>
+
+	<p>query (Client -> FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?cmd=start_streaming&#38;sat_idx=%d&#38;svc_type=%d&#38;svc_idx=%d&#38;net_protocol=%d&#38;net_client_ip="%d.%d.%d.%d"&#38;net_client_port=%d&#38;pin_code="%c%c%c%c"</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+	<ul>
+	<li>You need to enter the pin_code only in case of block service.</li>
+		<li>net_protocol - T_NetProtocol</li>
+		<li>Error of response is the value of T_StreamingErr. If the streaming begin without any problem, then the value of error is StreamingErr_None.</li>
+		<li><strong>When Streaming of the locked service of Favorite group is requested, then the value of sat_idx should be the sat_idx of that locked Favorite group</strong></li>
+	</ul>
+
+
+	<ul>
+	<li>If net_protocol is NetProtocol_hls</li>
+	</ul>
+
+
+<blockquote>
+
+	<ol>
+	<li>No need to enter the either value of net_client_ip and net_client_port</li>
+		<li>The URL of HLS server is included in the return message of frql?q=status</li>
+		<li>Default ID of Set-top Web Server is “root”, and Default Password does not exist. (For example: <a class="external" href="http://root:@boxip/.../...m3u8">http://root:@boxip/.../...m3u8</a>)</li>
+		<li>When start_streaming began successful with the StreamingErr_None value of streaming error, then the appropriate time for downloading a file from HLS server is, 10 seconds after the time when start_streaming was successfully returned.</li>
+	</ol>
+
+
+</blockquote></blockquote>
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+typedef enum {
+     StreamingErr_None,
+     StreamingErr_Fail,
+     StreamingErr_NotAvailableState,
+     StreamingErr_NowPlaying,
+     StreamingErr_StorageError,
+     StreamingErr_PinCodeError,
+} T_StreamingErr;
+
+typedef enum {
+     NetProtocol_rtp,
+     NetProtocol_udp,
+     NetProtocol_hls
+} T_NetProtocol;
+</pre>
+
+	<a name="stop_streaming"></a>
+<h2 >stop_streaming<a href="#stop_streaming" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+&lt;frior:query xmlns:frior="http://%s:%d" frior:count="%d" frior:created="%4d-%02d-%02dT%02d:%02d:%02d" frior:version="%d.%d"&gt;
+  &lt;results&gt;
+    &lt;stop error="%d"/&gt;
+  &lt;/results&gt;
+&lt;/frior:query&gt;
+&lt;!--  frql.frior  --&gt;
+</pre>
+
+<blockquote><blockquote>
+
+	<p>query (Client -> FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?cmd=stop_streaming</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+	<ul>
+	<li>error - 0 = ok, 1 = fail.</li>
+		<li>Even if in case of fail, no need to check further.</li>
+	</ul>
+
+
+</blockquote>
+
+	<a name="change_svc"></a>
+<h2 >change_svc<a href="#change_svc" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+&lt;frior:query xmlns:frior="http://%s:%d" frior:count="%d" frior:created="%4d-%02d-%02dT%02d:%02d:%02d" frior:version="%d.%d"&gt;
+  &lt;results&gt;
+    &lt;svc idx="%d" type="%d" error="%d"/&gt;
+  &lt;/results&gt;
+&lt;/frior:query&gt;
+&lt;!--  frql.frior  --&gt;
+</pre>
+
+<blockquote><blockquote>
+
+	<p>query (Client -> FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?cmd=change_svc&#38;sat_idx=%d&#38;svc_type=%d&#38;svc_idx=%d&#38;pin_code="%c%c%c%c"</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+	<ul>
+	<li>You need to enter the pin_code only in case of block service.</li>
+		<li>error - 0 = ok, 1 = fail.</li>
+		<li>change_svc is only possible in the live mode.</li>
+		<li><strong>When service Change of the locked service of Favorite group is requested, then the value of sat_idx should be the sat_idx of that locked Favorite group</strong></li>
+	</ul>
+
+
+</blockquote>
+
+	<a name="check_pin"></a>
+<h2 >check_pin<a href="#check_pin" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+&lt;frior:query xmlns:frior="http://%s:%d" frior:count="%d" frior:created="%4d-%02d-%02dT%02d:%02d:%02d" frior:version="%d.%d"&gt;
+  &lt;results&gt;
+    &lt;pin error="%d"/&gt;
+  &lt;/results&gt;
+&lt;/frior:query&gt;
+&lt;!--  frql.frior  --&gt;
+</pre>
+
+<blockquote>
+
+	<ul>
+	<li>error - 0 = ok, 1 = fail.</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote><blockquote>
+
+	<p>query (Client -> FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?cmd=check_pin&#38;pin_code="%c%c%c%c"</li>
+	</ul>
+
+
+</blockquote>
+
+	<a name="rcu"></a>
+<h2 >rcu<a href="#rcu" class="wiki-anchor">&para;</a></h2>
+
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+&lt;frior:query xmlns:frior="http://%s:%d" frior:count="%d" frior:created="%4d-%02d-%02dT%02d:%02d:%02d" frior:version="%d.%d"&gt;
+  &lt;results&gt;
+    &lt;rcu error="%d"/&gt;
+  &lt;/results&gt;
+&lt;/frior:query&gt;
+&lt;!--  frql.frior  --&gt;
+</pre>
+
+<blockquote><blockquote>
+
+	<p>query (Client -> FRior)</p>
+
+
+</blockquote>
+
+	<ul>
+	<li>frql?cmd=rcu&#38;key=%d&#38;repeat=%d (key = REM_xx) (repeat= 0 or 1)</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+	<ul>
+	<li>error - 0 = ok, 1 = fail.</li>
+	</ul>
+
+
+</blockquote>
+
+<blockquote>
+
+</blockquote>
+
+<pre>
+#define REM_UP          0x0
+#define REM_DOWN        0x1
+#define REM_RIGHT       0x2
+#define REM_LEFT        0x3
+#define REM_MENU        0x4
+#define REM_OK          0x1f
+#define REM_FAVORITE    0x41
+#define REM_SAT         0x05
+//#define REM_POWER     0xff
+#define REM_MUTE        0xc
+#define REM_GUIDE       0x8
+#define REM_EXIT        0x1c
+#define REM_INFO        0x6
+#define REM_TVRADIO     0x1a
+#define REM_PLAYLIST    0x40
+#define REM_AUDIOTRK    0x49
+#define REM_SUBT        0x0b
+#define REM_0           0x10
+#define REM_1           0x11
+#define REM_2           0x12
+#define REM_3           0x13
+#define REM_4           0x14
+#define REM_5           0x15
+#define REM_6           0x16
+#define REM_7           0x17
+#define REM_8           0x18
+#define REM_9           0x19
+#define REM_F1          0x4b
+#define REM_F2          0x4a
+#define REM_F3          0x49    // same as REM_AUDIOTRK
+#define REM_F4          0x48
+//#define REM_UHF       0x
+#define REM_SLEEP       0x1e
+#define REM_TELETEXT    0x0d
+#define REM_RECALL      0x09
+#define REM_PGUP        0x44
+#define REM_PGDOWN      0x43
+//#define REM_TVSAT     0x
+//#define REM_TEST      0x
+#define REM_PAUSE       0x07
+#define REM_PREV        0x50
+#define REM_NEXT        0x4c
+#define REM_FastBackward 0x58
+#define REM_FastForward 0x5c
+#define REM_Record      0x56
+#define REM_PLAY        0x55
+#define REM_STOP        0x54
+#define REM_RESOLUTION  0x0f
+#define REM_VFORMAT     0x0e
+#define REM_VOLUP       0x4e
+#define REM_VOLDOWN     0x4f
+#define REM_CHUP        0x5e
+#define REM_CHDOWN      0x5f
+#define REM_PIP         0x51
+#define REM_PIPLIST     0x53
+#define REM_SWAP        0x52
+#define REM_POINTMARK   0x42
+</pre>
+
+<hr />
+
+
+<hr />
+
+
+<blockquote>
+
+	<p>NOTE : If you have any question about this document, please mail to <a class="email" href="mailto:frior@fortis.co.kr">frior@fortis.co.kr</a></p>
+
+
+</blockquote>
+
+<hr />
+
+<blockquote>
+
+</blockquote>
+</body>
+</html>
